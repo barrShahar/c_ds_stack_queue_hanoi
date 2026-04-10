@@ -35,4 +35,8 @@ make clean  # remove binaries
 
 ```bash
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./run
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./test_v
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./test_q
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./test_s
+
 ```

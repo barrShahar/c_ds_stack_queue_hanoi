@@ -18,7 +18,7 @@ int PrintIntAction(void* _integer, size_t i, void* context)
     }
 
     int* intPtr = (int*)_integer;
-    printf("%ld: %d  \n", i, *intPtr);
+    printf("%zu: %d  \n", i, *intPtr);
     return 1; // Keep going, dont break the foreach loop
 }
 
@@ -37,7 +37,7 @@ void TestAppend(Vector* _vector, size_t _initialCapacity, size_t _blockSize)
     size_t capacity = _initialCapacity;
     for (size_t i = 0; i < n ; ++i)
     {
-        int* toAppend = malloc(sizeof(int));
+        int* toAppend = malloc(sizeof(int));    // Clean memory at remove
         *toAppend = i % 4;
         assert(VectorAppend(_vector, (void*) toAppend) == 0);
         assert(++size == VectorSize(_vector));
@@ -48,6 +48,7 @@ void TestAppend(Vector* _vector, size_t _initialCapacity, size_t _blockSize)
         }
     }
     printf("[Passed] Test Append\n==\n");
+
 }
 
 void IntElementDestroy(void* _int)
@@ -76,11 +77,12 @@ void TestRemove(Vector* _vector)
         assert(result == 0);
         printf("element: %d ", *elementPtr);
         free(elementPtr);
-        printf("size: %ld, capacity: %ld\n", VectorSize(_vector), VectorCapacity(_vector));
+        printf("size: %zu, capacity: %zu\n", VectorSize(_vector), VectorCapacity(_vector));
         // assert(size-- == VectorSize(_vector));
     }
     printf("\n");
 
+    assert(VectorSize(_vector) == 0);
     // Remove empty vector
     int* elementPtr;
     VectorResult result = VectorRemove(_vector, (void**) &elementPtr);
@@ -94,17 +96,23 @@ void TestSet(Vector *_vector)
     printf(" * Test Set\n");
 
     size_t size = VectorSize(_vector);
-    int value = 3000;
+    int setVal = 3000;
     for (size_t i = 0 ; i < size ; ++i)
     {
-        VectorSet(_vector, i, &value);
+        int *oldValue;
+        VectorGet(_vector, i, (void**) &oldValue);
+        free(oldValue);
+
+        int *newValue = malloc(sizeof(int));
+        *newValue = setVal;
+        VectorSet(_vector, i, newValue);
     }
 
     int *getValue;
     for (size_t i = 0 ; i < size ; ++i)
     {
         VectorGet(_vector, i, (void**) &getValue);
-        assert(*getValue == value);
+        assert(*getValue == setVal);
     }
 
     PrintVector(_vector);
@@ -135,6 +143,9 @@ int main()
     TestAppend(vector2, initialCapacity, blockSize);
     TestSet(vector2);
     passed++;
+
+    TestDestroy(&vector2);
+    total++; passed++;
 
     printf("============================\n");
     printf("Passed %zu out of %zu tests\n", passed, total);
