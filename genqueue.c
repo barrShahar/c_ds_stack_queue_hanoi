@@ -1,5 +1,4 @@
 #include "genqueue.h"
-#include <stdbool.h>
 #include <stdlib.h>
 
 struct Queue
@@ -13,13 +12,11 @@ struct Queue
 
 #define RING_INC(number, base) (number) = ((number) + 1) % base
 
-static bool QueueIsEmptyLocal(Queue *_queue);
-
 Queue *QueueCreate(size_t _size)
 {
     if (_size == 0) { return NULL; }
     
-    Queue *queue = malloc(1 * sizeof(Queue));
+    Queue *queue = malloc(sizeof(Queue));
     if (queue == NULL) { return NULL; }
 
     queue->m_capacity = _size;
@@ -92,7 +89,7 @@ QueueResult QueueRemove(Queue* _queue,void** _item)
 size_t QueueIsEmpty(Queue* _queue)
 {
     if (_queue == NULL) { return (size_t)-1; }
-    if (QueueIsEmptyLocal(_queue)) { return 1; }
+    if (_queue->m_numberOfItems == 0) { return 1; }
     return 0;
 }
 
@@ -101,7 +98,7 @@ size_t QueueIsEmpty(Queue* _queue)
 size_t QueueForEach(Queue* _queue, ActionFunction _action, void* _context)
 {
     if (_queue == NULL || _action == NULL) { return 0; }
-    if (QueueIsEmptyLocal(_queue)) { return 0; }
+    if (_queue->m_numberOfItems == 0) { return 0; }
 
     size_t queueIndex = _queue->m_head;
     size_t i;
@@ -118,7 +115,3 @@ size_t QueueForEach(Queue* _queue, ActionFunction _action, void* _context)
     return i;
 }
 
-static bool QueueIsEmptyLocal(Queue *_queue)
-{
-    return _queue->m_numberOfItems == 0;
-}

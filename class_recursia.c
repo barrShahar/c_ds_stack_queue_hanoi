@@ -2,52 +2,53 @@
 #include <stdio.h>
 #include <string.h>
 
-static void PrintMultiplicationBoard(size_t row, size_t col, size_t n);
-static void ReverseRecursion(int *head, int *tail);
-static float FindAverage(int const *array, int const *end, size_t length, long sum);
+static void PrintMultiplicationBoard(size_t _row, size_t _col, size_t _n);
+static void ReverseRecursion(int *_head, int *_tail);
+static float FindAverage(int const *_array, int const *_end, size_t _length, long _sum);
 
-void RecPrintMultiplicationBoard(size_t n)
+void RecPrintMultiplicationBoard(size_t _n)
 {
-    PrintMultiplicationBoard(1, 1, n);
+    PrintMultiplicationBoard(1, 1, _n);
     return;
 }
 
-static void PrintMultiplicationBoard(size_t row, size_t col, size_t n)
+static void PrintMultiplicationBoard(size_t _row, size_t _col, size_t _n)
 {
     // Stopping condition
-    if (row > n)
+    if (_row > _n)
     {
         return;
     }
 
     // Prints element i,j of the multiplication board (nxn matrix)
-    printf("%ld\t", col * row);
+    printf("%zu\t", _col * _row);
 
     // Condition of moving the next row of nXx matrix
-    if (col + 1 > n)
+    if (_col + 1 > _n)
     {
         printf("\n");   // New line for a new row
-        PrintMultiplicationBoard(row + 1, 1, n);
+        PrintMultiplicationBoard(_row + 1, 1, _n);
         return;
     }
-    
-    PrintMultiplicationBoard(row, col + 1, n);
+
+    PrintMultiplicationBoard(_row, _col + 1, _n);
 
 }
 
-static float FindAverage(int const *array, int const *end, size_t length, long sum)
+static float FindAverage(int const *_array, int const *_end, size_t _length, long _sum)
 {
-    if (array == end)
+    if (_array == _end)
     {
-        return (float) sum / length;
+        return (float) _sum / _length;
     }
 
-    return FindAverage(array + 1, end, length, sum + *array);
+    return FindAverage(_array + 1, _end, _length, _sum + *_array);
 }
 
-float RecFindAverage(int const *array, size_t const length)
+float RecFindAverage(int const *_array, size_t const _length)
 {
-    return FindAverage(array, array + length, length, 0);
+    if (_length == 0) { return 0.0f; }
+    return FindAverage(_array, _array + _length, _length, 0);
 }
 
 #define SWAP(a, b, type) do { \
@@ -56,60 +57,59 @@ float RecFindAverage(int const *array, size_t const length)
     *(b) = tmp;               \
 } while(0)
 
-static void ReverseRecursion(int *head, int *tail)
+static void ReverseRecursion(int *_head, int *_tail)
 {
-    if (head >= tail)
+    if (_head >= _tail)
     {
         return;
     }
-    SWAP(head, tail, int);
+    SWAP(_head, _tail, int);
 
-    ReverseRecursion(head + 1, tail - 1);
+    ReverseRecursion(_head + 1, _tail - 1);
 }
 
 
-void RecReverseArray(int *head, int *tail)
+void RecReverseArray(int *_head, int *_tail)
 {
-    if (!head || !tail)
+    if (!_head || !_tail)
     {
         return;
     }
 
-    ReverseRecursion(head, tail);
+    ReverseRecursion(_head, _tail);
     return;
 }
 
 
-static bool IsPalindrome(char *head, char *tail)
+static bool IsPalindrome(char *_head, char *_tail)
 {
-    if (head >= tail)
+    if (_head >= _tail)
     {
         return true;
     }
-    if (*head != *tail)
+    if (*_head != *_tail)
     {
         return false;
     }
-    return IsPalindrome(head + 1, tail - 1);
+    return IsPalindrome(_head + 1, _tail - 1);
 }
 
-bool RecIsPalindrome(char *arr)
+bool RecIsPalindrome(char *_arr)
 {
-    if (!arr)
-    {
-        return false;
-    }
-    return IsPalindrome(arr, arr + strlen(arr) - 1);
+    if (!_arr) { return false; }
+    size_t length;
+    if ((length = strlen(_arr)) == 0) { return true; }
+    return IsPalindrome(_arr, _arr + length - 1);
 }
 
-static void ReverseStringRecursion(char *head, char *tail)
+static void ReverseStringRecursion(char *_head, char *_tail)
 {
-    if (head >= tail)
+    if (_head >= _tail)
     {
         return;
     }
-    SWAP(head, tail, char);
-    ReverseStringRecursion(head + 1, tail - 1);
+    SWAP(_head, _tail, char);
+    ReverseStringRecursion(_head + 1, _tail - 1);
 }
 
 void RecReverseString(char *_arr)
@@ -118,6 +118,8 @@ void RecReverseString(char *_arr)
     {
         return;
     }
-    ReverseStringRecursion(_arr, _arr + strlen(_arr) - 1);
+    size_t length;
+    if ((length = strlen(_arr)) == 0) { return; }
+    ReverseStringRecursion(_arr, _arr + length - 1);
     return;
 }

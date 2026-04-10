@@ -29,7 +29,7 @@ void PrintVector(const Vector* _vector)
 
 void TestAppend(Vector* _vector, size_t _initialCapacity, size_t _blockSize)
 {
-    printf("==\nTest Append\n==\n");
+    printf(" * Test Append\n");
 
     size_t n = (_initialCapacity + _blockSize) * 3;
 
@@ -47,6 +47,7 @@ void TestAppend(Vector* _vector, size_t _initialCapacity, size_t _blockSize)
             assert(capacity == VectorCapacity(_vector));
         }
     }
+    printf("[Passed] Test Append\n==\n");
 }
 
 void IntElementDestroy(void* _int)
@@ -56,14 +57,16 @@ void IntElementDestroy(void* _int)
 
 void TestDestroy(Vector** _vector)
 {
+    printf(" * Test Destroy\n");
     VectorDestroy(_vector, IntElementDestroy);
 
     assert(*_vector == NULL);
+    printf("[Passed] Test Destroy\n==\n");
 }
 
 void TestRemove(Vector* _vector)
 {
-    printf("==\nTest Remove\n==\n");
+    printf(" * Test Remove\n");
     size_t size = VectorSize(_vector);
 
     for (size_t i = size; i > 0; --i)
@@ -82,12 +85,13 @@ void TestRemove(Vector* _vector)
     int* elementPtr;
     VectorResult result = VectorRemove(_vector, (void**) &elementPtr);
     assert(result == VECTOR_SIZE_ZERO_ERROR);
+    printf("[Passed] Test Remove\n==\n");
 }
 
 
 void TestSet(Vector *_vector)
 {
-    printf("==\nTest Set\n==\n");
+    printf(" * Test Set\n");
 
     size_t size = VectorSize(_vector);
     int value = 3000;
@@ -104,25 +108,36 @@ void TestSet(Vector *_vector)
     }
 
     PrintVector(_vector);
+    printf("[Passed] Test Set\n==\n");
 }
 
 int main()
 {
+    size_t passed = 0;
+    size_t total = 4;
+
     size_t initialCapacity = 3;
     size_t blockSize = 6;
+
     Vector* vector = VectorCreate(initialCapacity, blockSize);
     TestAppend(vector, initialCapacity, blockSize);
-
-    printf("After append test: \n"); PrintVector(vector); 
+    printf("After append test: \n"); PrintVector(vector);
     printf("\n");
+    passed++;
 
     TestRemove(vector);
+    passed++;
 
     TestDestroy(&vector);
+    passed++;
 
     Vector* vector2 = VectorCreate(initialCapacity, blockSize);
     TestAppend(vector2, initialCapacity, blockSize);
     TestSet(vector2);
-    
+    passed++;
+
+    printf("============================\n");
+    printf("Passed %zu out of %zu tests\n", passed, total);
+
     return 0;
 }

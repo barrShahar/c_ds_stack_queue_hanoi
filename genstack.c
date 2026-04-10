@@ -17,17 +17,17 @@ Stack* StackCreate(size_t _initialCapacity, size_t _blockSize)
         return NULL;
     }
 
-    Stack* stackPtr = malloc(sizeof *stackPtr);
-    if (!stackPtr) { return NULL; }
+    Stack *stack = malloc(sizeof *stack);
+    if (!stack) { return NULL; }
 
-    stackPtr->m_vector = VectorCreate(_initialCapacity, _blockSize);
-    if (!stackPtr->m_vector)
+    stack->m_vector = VectorCreate(_initialCapacity, _blockSize);
+    if (!stack->m_vector)
     {
-        free(stackPtr);
+        free(stack);
         return NULL;
     }
 
-    return stackPtr;
+    return stack;
 }
 
 void StackDestroy(Stack** _stack, void (*_elementDestroy)(void* _item))
